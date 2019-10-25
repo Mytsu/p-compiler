@@ -1,29 +1,59 @@
 """
 
- Linguagem Toy
-
+ Linguagem P
     Gramatica::
 
-    F* --> C Rf
-    Rf --> C Rf | lambda
-    C  --> A | R | P
-    A --> ident = E ;
-    R --> read ( ident ) ;
-    P --> print ( ident ) ;
+    G1 = {{PROG, DECLS, C-COMP, LIST-DECLS, DECL-TIPO, D, LIST-ID, E, TIPO, LISTACOMANDOS, G, COMANDOS, IF, WHILE, READ, ATRIB, WRITE, EXPR, H, LIST-W, L, ELEM-W, SIMPLES, P, R, TERMO, S, FAT}{programa, id, variaveis, inteiro, real, logico, caracter, abrepar, fechapar, se, abrech, fechach, senao, enquanto, leia, atrib, escreva, cadeia, cte, verdadeiro, falso, oprel, opad, opmul, opneg, pvirg, virg, dpontos}, P, PROG} 
+    
+    P={ PROG → programa id pvirg DECLS C-COMP
+        DECLS → $ | variaveis  LIST-DECLS
+        LIST-DECLS → DECL-TIPO D
+        D → $ | LIST-DECLS 
+        DECL-TIPO → LIST-ID dpontos TIPO pvirg 
+        LIST-ID → id E
+        E → $ | virg LIST-ID 
+        TIPO → inteiro | real | logico | caracter
+        C-COMP → abrech LISTA-COMANDOS fechach 
+        LISTA-COMANDOS → COMANDOS G 
+        G → $ | LISTA-COMANDOS 
+        COMANDOS → IF | WHILE | READ | WRITE | ATRIB 
+        IF → se abrepar EXPR fechapar C-COMP H 
+        H → $ | senao C-COMP 
+        WHILE → enquanto abrepar EXPR fechapar C-COMP 
+        READ → leia abrepar LIST-ID fechapar pvirg 
+        ATRIB → id atrib EXPR pvirg 
+        WRITE → escreva abrepar LIST-W fechapar pvirg 
+        LIST-W → ELEM-W L 
+        L → $ | virg LIST-W 
+        ELEM-W → EXPR | cadeia 
+        EXPR → SIMPLES P 
+        P → $ | oprel SIMPLES 
+        SIMPLES → TERMO R 
+        R → $ | opad SIMPLES 
+        TERMO → FAT S 
+        S → $ | opmul TERMO 
+        FAT → id | cte | abrepar EXPR fechapar | verdadeiro | falso | opneg FAT}
 
-    E --> M Rs
-    Rs --> + M Rs | lambda
-    M --> Op Rm
-    Rm --> * Op Rm | lambda
-    Op --> ( E ) | num
 
     Tokens::
 
-    IDENT ATRIB READ PTOVIRG PRINT ADD MULT OPENPAR CLOSEPAR NUM ERROR FIMARQ
+    ID CTE CADEIA ATRIB OPREL OPAD OPMUL OPNEG PVIRG DPONTOS VIRG ABREPAR FECHAPAR ABRECH FECHACH
+
+    Palavras reservadas::
+
+    PROGRAMA, VARIAVEIS, INTEIRO, REAL, LOGICO, CARACTER, SE, SENAO, ENQUANTO, LEIA, ESCREVA, FALSO, VERDADEIRO
+
+    Tipos basicos::
+
+    INTEIRO, REAL, LOGICO, CARACTER
 
     Comentarios::
 
-    iniciam com # ate o fim da linha
+    iniciam com // ate o fim da linha
+
+    /*
+        
+    */
 
 """
 
@@ -135,6 +165,6 @@ class Sintatico:
 if __name__== "__main__":
 
    #nome = input("Entre com o nome do arquivo: ")
-   nome = 'exemplo.toy'
+   nome = 'exemplo11.txt'
    parser = Sintatico()
    parser.interprete(nome)
