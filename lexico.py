@@ -60,18 +60,36 @@
 from os import path
 
 class TipoToken:
-    IDENT = (1, 'ident')
-    ATRIB = (2, '=')
-    READ = (3, 'read')
-    PTOVIRG = (4, ';')
-    PRINT = (5, 'print')
-    ADD = (6, '+')
-    MULT = (7, '*')
-    OPENPAR = (8, '(')
-    CLOSEPAR = (9, ')')
-    NUM = (10, 'numero')
-    ERROR = (11, 'erro')
-    FIMARQ = (12, 'fim-de-arquivo')
+    # Tokens
+    ID = (1, 'ID')
+    CTE = (2, 'NUM')
+    CADEIA = (3, 'CADEIA')
+    ATRIB = (4, ':=')
+    OPREL = (5, '= < > <= >= <>')
+    OPAD = (6, '+ -')
+    OPMUL = (7, '* /')
+    PVIRG = (8, ';')
+    DPONTOS = (9, ':')
+    VIRG = (10, ',')
+    ABREPAR = (11, '(')
+    FECHAPAR = (12, ')')
+    ABRECH = (13, '{')
+    FECHACH = (14, '}')
+
+    # Palavras reservadas
+    PROGRAMA = (15, 'PROGRAMA')
+    VARIAVEIS = (16, 'VARIAVEIS')
+    INTEIRO = (17, 'INTEIRO')
+    REAL = (18, 'REAL')
+    LOGICO = (19, 'LOGICO')
+    CARACTER = (20, 'CARACTER')
+    SE = (21, 'SE')
+    SENAO = (22, 'SENAO')
+    ENQUANTO = (23, 'ENQUANTO')
+    LEIA = (24, 'LEIA')
+    ESCREVA = (25, 'ESCREVA')
+    FALSO = (26, 'FALSO')
+    VERDADEIRO = (27, 'VERDADEIRO')
 
 class Token:
     def __init__(self, tipo, lexema, linha):
