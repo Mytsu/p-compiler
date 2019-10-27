@@ -5,7 +5,9 @@
 
     G1 = {{PROG, DECLS, C-COMP, LIST-DECLS, DECL-TIPO, D, LIST-ID, E, TIPO, LISTACOMANDOS, G, COMANDOS, IF, WHILE, READ, ATRIB, WRITE, EXPR, H, LIST-W, L, ELEM-W, SIMPLES, P, R, TERMO, S, FAT}{programa, id, variaveis, inteiro, real, logico, caracter, abrepar, fechapar, se, abrech, fechach, senao, enquanto, leia, atrib, escreva, cadeia, cte, verdadeiro, falso, oprel, opad, opmul, opneg, pvirg, virg, dpontos}, P, PROG} 
     
-    P={ PROG → programa id pvirg DECLS C-COMP
+    P={ 
+        A → PROG $
+        PROG → programa id pvirg DECLS C-COMP
         DECLS → $ | variaveis  LIST-DECLS
         LIST-DECLS → DECL-TIPO D
         D → $ | LIST-DECLS 
@@ -60,14 +62,15 @@
 from os import path
 
 class TipoToken:
+    FIMARQ = (0, '$')
     # Tokens
     ID = (1, 'ID')
     CTE = (2, 'NUM')
     CADEIA = (3, 'CADEIA')
     ATRIB = (4, ':=')
-    OPREL = (5, '= < > <= >= <>')
-    OPAD = (6, '+ -')
-    OPMUL = (7, '* /')
+    OPREL = (5, {'=', '<', '>', '<=', '>=', '<>'})
+    OPAD = (6, {'+', '-'})
+    OPMUL = (7, {'*', '/'})
     PVIRG = (8, ';')
     DPONTOS = (9, ':')
     VIRG = (10, ',')
@@ -75,7 +78,6 @@ class TipoToken:
     FECHAPAR = (12, ')')
     ABRECH = (13, '{')
     FECHACH = (14, '}')
-
     # Palavras reservadas
     PROGRAMA = (15, 'PROGRAMA')
     VARIAVEIS = (16, 'VARIAVEIS')
@@ -90,6 +92,8 @@ class TipoToken:
     ESCREVA = (25, 'ESCREVA')
     FALSO = (26, 'FALSO')
     VERDADEIRO = (27, 'VERDADEIRO')
+    # Error Token, nao esta presente na gramatica
+    ERROR = (28, 'ERROR')
 
 class Token:
     def __init__(self, tipo, lexema, linha):
@@ -102,7 +106,20 @@ class Token:
 
 class Lexico:
     # dicionario de palavras reservadas
-    reservadas = { 'print': TipoToken.PRINT, 'read': TipoToken.READ }
+    reservadas = { 
+        'leia': TipoToken.LEIA,
+        'escreva': TipoToken.ESCREVA,
+        'programa': TipoToken.PROGRAMA,
+        'variaveis': TipoToken.VARIAVEIS,
+        'inteiro': TipoToken.INTEIRO,
+        'real': TipoToken.REAL,
+        'logico': TipoToken.LOGICO,
+        'caracter': TipoToken.CARACTER,
+        'se': TipoToken.SE,
+        'senao': TipoToken.SENAO,
+        'falso': TipoToken.FALSO,
+        'verdadeiro': TipoToken.VERDADEIRO
+    }
 
     def __init__(self, nomeArquivo):
         self.nomeArquivo = nomeArquivo
