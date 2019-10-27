@@ -62,7 +62,6 @@
 from os import path
 
 class TipoToken:
-    FIMARQ = (0, '$')
     # Tokens
     ID = (1, 'ID')
     CTE = (2, 'NUM')
@@ -95,6 +94,7 @@ class TipoToken:
     VERDADEIRO = (27, 'VERDADEIRO')
     # Error Token, nao esta presente na gramatica
     ERROR = (28, 'ERROR')
+    FIMARQ = (29, 'EOF')
 
 class Token:
     def __init__(self, tipo, lexema, linha):
