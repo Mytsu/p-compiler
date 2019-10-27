@@ -5,33 +5,35 @@
 
     G1 = {{PROG, DECLS, C-COMP, LIST-DECLS, DECL-TIPO, D, LIST-ID, E, TIPO, LISTACOMANDOS, G, COMANDOS, IF, WHILE, READ, ATRIB, WRITE, EXPR, H, LIST-W, L, ELEM-W, SIMPLES, P, R, TERMO, S, FAT}{programa, id, variaveis, inteiro, real, logico, caracter, abrepar, fechapar, se, abrech, fechach, senao, enquanto, leia, atrib, escreva, cadeia, cte, verdadeiro, falso, oprel, opad, opmul, opneg, pvirg, virg, dpontos}, P, PROG} 
     
-    P={ PROG → programa id pvirg DECLS C-COMP
-        DECLS → $ | variaveis  LIST-DECLS
+    P={ 
+        A → PROG $
+        PROG → programa id pvirg DECLS C-COMP
+        DECLS → λ | variaveis  LIST-DECLS
         LIST-DECLS → DECL-TIPO D
-        D → $ | LIST-DECLS 
+        D → λ | LIST-DECLS 
         DECL-TIPO → LIST-ID dpontos TIPO pvirg 
         LIST-ID → id E
-        E → $ | virg LIST-ID 
+        E → λ | virg LIST-ID 
         TIPO → inteiro | real | logico | caracter
         C-COMP → abrech LISTA-COMANDOS fechach 
         LISTA-COMANDOS → COMANDOS G 
-        G → $ | LISTA-COMANDOS 
+        G → λ | LISTA-COMANDOS 
         COMANDOS → IF | WHILE | READ | WRITE | ATRIB 
         IF → se abrepar EXPR fechapar C-COMP H 
-        H → $ | senao C-COMP 
+        H → λ | senao C-COMP 
         WHILE → enquanto abrepar EXPR fechapar C-COMP 
         READ → leia abrepar LIST-ID fechapar pvirg 
         ATRIB → id atrib EXPR pvirg 
         WRITE → escreva abrepar LIST-W fechapar pvirg 
         LIST-W → ELEM-W L 
-        L → $ | virg LIST-W 
+        L → λ | virg LIST-W 
         ELEM-W → EXPR | cadeia 
         EXPR → SIMPLES P 
-        P → $ | oprel SIMPLES 
+        P → λ | oprel SIMPLES 
         SIMPLES → TERMO R 
-        R → $ | opad SIMPLES 
+        R → λ | opad SIMPLES 
         TERMO → FAT S 
-        S → $ | opmul TERMO 
+        S → λ | opmul TERMO 
         FAT → id | cte | abrepar EXPR fechapar | verdadeiro | falso | opneg FAT}
 
 
@@ -61,9 +63,11 @@ from lexico import TipoToken as tt, Token, Lexico
 
 class Sintatico:
 
-    def __init__(self):
+    def __init__(self, gerar_tokens: bool):
         self.lex = None
         self.tokenAtual = None
+        self.gerar_tokens = gerar_tokens
+        self.tokens = []
 
     def interprete(self, nomeArquivo):
         if not self.lex is None:
@@ -73,98 +77,218 @@ class Sintatico:
             self.lex.abreArquivo()
             self.tokenAtual = self.lex.getToken()
 
-            self.F()
-            self.consome( tt.FIMARQ )
+            self.A()
 
             self.lex.fechaArquivo()
 
     def atualIgual(self, token):
-        (const, msg) = token
+        (const, _) = token
         return self.tokenAtual.const == const
 
     def consome(self, token):
         if self.atualIgual( token ):
             self.tokenAtual = self.lex.getToken()
+            if self.gerar_tokens:
+                self.tokens.append(self.tokenAtual)
         else:
-            (const, msg) = token
+            (_, msg) = token
             print('ERRO DE SINTAXE [linha %d]: era esperado "%s" mas veio "%s"'
                % (self.tokenAtual.linha, msg, self.tokenAtual.lexema))
             quit()
 
-    def F(self):
-        self.C()
-        self.Rf()
+    def A(self):
+        self.PROG()
+        self.consome( tt.FIMARQ )
 
-    def Rf(self):
-        if self.atualIgual( tt.FIMARQ ):
+    def PROG(self):
+        self.consome( tt.PROGRAMA )
+        self.consome( tt.ID )
+        self.consome( tt.PVIRG )
+        self.DECLS()
+        self.C_COMP()
+    
+    def DECLS(self):
+        if not self.atualIgual( tt.VARIAVEIS ):
             pass
         else:
-            self.C()
-            self.Rf()
-
-    def C(self):
-        if self.atualIgual( tt.READ ):
-            self.R()
-        elif self.atualIgual( tt.PRINT ):
-            self.P()
+            self.consome( tt.VARIAVEIS )
+            self.LIST_DECLS()
+    
+    def LIST_DECLS(self):
+        self.DECL_TIPO()
+        self.D()
+    
+    def D(self):
+        if not False: # TODO Checar First-Follow de D
+            pass
         else:
-            self.A()
+            self.LIST_DECLS()
+    
+    def DECL_TIPO(self):
+        self.LIST_ID()
+        self.consome( tt.DPONTOS )
+        self.TIPO()
+        self.consome( tt.PVIRG )
 
-    def A(self):
-        self.consome( tt.IDENT )
-        self.consome( tt.ATRIB )
+    def LIST_ID(self):
+        self.consome( tt.ID )
         self.E()
-        self.consome( tt.PTOVIRG )
-
-    def R(self):
-        self.consome( tt.READ )
-        self.consome( tt.OPENPAR )
-        self.consome( tt.IDENT )
-        self.consome( tt.CLOSEPAR )
-        self.consome( tt.PTOVIRG )
-
-    def P(self):
-        self.consome( tt.PRINT )
-        self.consome( tt.OPENPAR )
-        self.consome( tt.IDENT )
-        self.consome( tt.CLOSEPAR )
-        self.consome( tt.PTOVIRG )
 
     def E(self):
-        self.M()
-        self.Rs()
-
-    def Rs(self):
-        if self.atualIgual( tt.ADD ):
-            self.consome( tt.ADD )
-            self.M()
-            self.Rs()
-        else:
+        if not False: # TODO Checar First-Follow de E
             pass
-
-    def M(self):
-        self.Op()
-        self.Rm()
-
-    def Rm(self):
-        if self.atualIgual( tt.MULT ):
-            self.consome( tt.MULT )
-            self.Op()
-            self.Rm()
         else:
+            self.consome( tt.VIRG )
+            self.LIST_ID()
+
+    def TIPO(self):
+        if self.atualIgual( tt.INTEIRO ):
+            self.consome( tt.INTEIRO )
+        elif self.atualIgual( tt.REAL ):
+            self.consome( tt.REAL )
+        elif self.atualIgual( tt.LOGICO ):
+            self.consome( tt.LOGICO )
+        elif self.atualIgual( tt.CARACTER ):
+            self.consome( tt.CARACTER )
+
+    def C_COMP(self):
+        self.consome( tt.ABRECH )
+        self.LISTA_COMANDOS()
+        self.consome( tt.FECHACH )
+
+    def LISTA_COMANDOS(self):
+        self.COMANDOS()
+        self.G()
+
+    def G(self):
+        if not False: # TODO Checar First-Follow de G
             pass
-
-    def Op(self):
-        if self.atualIgual( tt.OPENPAR ):
-            self.consome( tt.OPENPAR )
-            self.E()
-            self.consome( tt.CLOSEPAR )
         else:
-            self.consome( tt.NUM )
+            self.LISTA_COMANDOS()
+
+    def COMANDOS(self):
+        if self.atualIgual( tt.SE ):
+            self.IF()
+        elif self.atualIgual( tt.ENQUANTO ):
+            self.WHILE()
+        elif self.atualIgual( tt.LEIA ):
+            self.READ()
+        elif self.atualIgual( tt.ESCREVA ):
+            self.WRITE()
+        elif self.atualIgual( tt.ID ):
+            self.ATRIB()
+
+    def IF(self):
+        self.consome( tt.SE )
+        self.consome( tt.ABREPAR )
+        self.EXPR()
+        self.consome( tt.FECHAPAR )
+        self.C_COMP()
+
+    def H(self):
+        if not False: # TODO Checar First-Follow de H
+            pass
+        else:
+            self.consome( tt.SENAO )
+            self.C_COMP()
+
+    def WHILE(self):
+        self.consome( tt.ENQUANTO )
+        self.consome( tt.ABREPAR )
+        self.LIST_W()
+        self.consome( tt.FECHAPAR )
+        self.consome( tt.PVIRG )
+
+    def READ(self):
+        self.consome( tt.LEIA )
+        self.consome( tt.ABREPAR )
+        self.LIST_ID()
+        self.consome( tt.FECHAPAR )
+        self.consome( tt.PVIRG )
+
+    def ATRIB(self):
+        self.consome( tt.ID )
+        self.consome( tt.ATRIB )
+        self.EXPR()
+        self.consome( tt.PVIRG )
+
+    def WRITE(self):
+        self.consome( tt.ESCREVA )
+        self.consome( tt.ABREPAR )
+        self.LIST_W()
+        self.consome( tt.FECHAPAR )
+        self.consome( tt.PVIRG )
+
+    def LIST_W(self):
+        self.ELEM_W()
+        self.L()
+
+    def L(self):
+        if not False: # TODO Checar First-Follow de L
+            pass
+        else:
+            self.consome( tt.VIRG )
+            self.LIST_W()
+    
+    def ELEM_W(self):
+        if not False: # TODO Checar First-Follow de EXPR
+            pass
+        else:
+            self.consome( tt.CADEIA )
+
+    def EXPR(self):
+        self.SIMPLES()
+        self.P()
+
+    def P(self):
+        if not False: # TODO Checar First-Follow de P
+            pass
+        else:
+            self.consome( tt.OPREL )
+            self.SIMPLES()
+
+    def SIMPLES(self):
+        self.TERMO()
+        self.R()
+
+    def R(self):
+        if not False: # TODO Checar First-Follow de R
+            pass
+        else:
+            self.consome( tt.OPAD )
+            self.SIMPLES()
+
+    def TERMO(self):
+        self.FAT()
+        self.S()
+
+    def S(self):
+        if not False: # TODO Checar First-Follow de S
+            pass
+        else:
+            self.consome( tt.OPMUL )
+            self.TERMO()
+
+    def FAT(self):
+        if self.tokenAtual( tt.ID ):
+            self.consome( tt.ID )
+        elif self.tokenAtual( tt.CTE ):
+            self.consome( tt.CTE )
+        elif self.tokenAtual( tt.ABREPAR ):
+            self.consome( tt.ABREPAR )
+            self.EXPR()
+            self.consome( tt.FECHAPAR )
+        elif self.tokenAtual( tt.VERDADEIRO ):
+            self.consome( tt.VERDADEIRO )
+        elif self.tokenAtual( tt.FALSO ):
+            self.consome( tt.FALSO )
+        elif self.tokenAtual( tt.OPNEG ):
+            self.consome( tt.OPNEG )
+            self.FAT()
 
 if __name__== "__main__":
 
    #nome = input("Entre com o nome do arquivo: ")
    nome = 'exemplo11.txt'
-   parser = Sintatico()
+   parser = Sintatico(False)
    parser.interprete(nome)

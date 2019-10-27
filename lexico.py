@@ -8,32 +8,32 @@
     P={ 
         A → PROG $
         PROG → programa id pvirg DECLS C-COMP
-        DECLS → $ | variaveis  LIST-DECLS
+        DECLS → λ | variaveis  LIST-DECLS
         LIST-DECLS → DECL-TIPO D
-        D → $ | LIST-DECLS 
+        D → λ | LIST-DECLS 
         DECL-TIPO → LIST-ID dpontos TIPO pvirg 
         LIST-ID → id E
-        E → $ | virg LIST-ID 
+        E → λ | virg LIST-ID 
         TIPO → inteiro | real | logico | caracter
         C-COMP → abrech LISTA-COMANDOS fechach 
         LISTA-COMANDOS → COMANDOS G 
-        G → $ | LISTA-COMANDOS 
+        G → λ | LISTA-COMANDOS 
         COMANDOS → IF | WHILE | READ | WRITE | ATRIB 
         IF → se abrepar EXPR fechapar C-COMP H 
-        H → $ | senao C-COMP 
+        H → λ | senao C-COMP 
         WHILE → enquanto abrepar EXPR fechapar C-COMP 
         READ → leia abrepar LIST-ID fechapar pvirg 
         ATRIB → id atrib EXPR pvirg 
         WRITE → escreva abrepar LIST-W fechapar pvirg 
         LIST-W → ELEM-W L 
-        L → $ | virg LIST-W 
+        L → λ | virg LIST-W 
         ELEM-W → EXPR | cadeia 
         EXPR → SIMPLES P 
-        P → $ | oprel SIMPLES 
+        P → λ | oprel SIMPLES 
         SIMPLES → TERMO R 
-        R → $ | opad SIMPLES 
+        R → λ | opad SIMPLES 
         TERMO → FAT S 
-        S → $ | opmul TERMO 
+        S → λ | opmul TERMO 
         FAT → id | cte | abrepar EXPR fechapar | verdadeiro | falso | opneg FAT}
 
 
@@ -78,6 +78,7 @@ class TipoToken:
     FECHAPAR = (12, ')')
     ABRECH = (13, '{')
     FECHACH = (14, '}')
+    OPNEG = (15, '!')
     # Palavras reservadas
     PROGRAMA = (15, 'PROGRAMA')
     VARIAVEIS = (16, 'VARIAVEIS')
