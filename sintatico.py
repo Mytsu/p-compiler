@@ -81,6 +81,9 @@ class Sintatico:
 
             self.lex.fechaArquivo()
 
+            if self.gerar_tokens:
+                print(self.tokens)
+
     def atualIgual(self, token):
         (const, _) = token
         return self.tokenAtual.const == const
