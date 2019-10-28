@@ -108,7 +108,7 @@ class Sintatico:
         self.C_COMP()
     
     def DECLS(self):
-        if not self.atualIgual( tt.VARIAVEIS ):
+        if False: # TODO DECLS
             pass
         else:
             self.consome( tt.VARIAVEIS )
@@ -119,7 +119,7 @@ class Sintatico:
         self.D()
     
     def D(self):
-        if not False: # TODO Checar First-Follow de D
+        if False: # TODO D
             pass
         else:
             self.LIST_DECLS()
@@ -135,7 +135,7 @@ class Sintatico:
         self.E()
 
     def E(self):
-        if not False: # TODO Checar First-Follow de E
+        if False: # TODO E
             pass
         else:
             self.consome( tt.VIRG )
@@ -161,7 +161,7 @@ class Sintatico:
         self.G()
 
     def G(self):
-        if not False: # TODO Checar First-Follow de G
+        if False: # TODO G
             pass
         else:
             self.LISTA_COMANDOS()
@@ -186,7 +186,7 @@ class Sintatico:
         self.C_COMP()
 
     def H(self):
-        if not False: # TODO Checar First-Follow de H
+        if False: # TODO H
             pass
         else:
             self.consome( tt.SENAO )
@@ -224,14 +224,14 @@ class Sintatico:
         self.L()
 
     def L(self):
-        if not False: # TODO Checar First-Follow de L
+        if False: # TODO L
             pass
         else:
             self.consome( tt.VIRG )
             self.LIST_W()
     
     def ELEM_W(self):
-        if not False: # TODO Checar First-Follow de EXPR
+        if False: # TODO EXPR
             pass
         else:
             self.consome( tt.CADEIA )
@@ -241,7 +241,7 @@ class Sintatico:
         self.P()
 
     def P(self):
-        if not False: # TODO Checar First-Follow de P
+        if False: # TODO P
             pass
         else:
             self.consome( tt.OPREL )
@@ -252,7 +252,7 @@ class Sintatico:
         self.R()
 
     def R(self):
-        if not False: # TODO Checar First-Follow de R
+        if False: # TODO R
             pass
         else:
             self.consome( tt.OPAD )
@@ -263,7 +263,7 @@ class Sintatico:
         self.S()
 
     def S(self):
-        if not False: # TODO Checar First-Follow de S
+        if False:
             pass
         else:
             self.consome( tt.OPMUL )
