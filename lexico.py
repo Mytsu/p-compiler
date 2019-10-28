@@ -77,7 +77,6 @@ class TipoToken:
     FECHAPAR = (12, ')')
     ABRECH = (13, '{')
     FECHACH = (14, '}')
-    OPNEG = (15, '!')
     # Palavras reservadas
     PROGRAMA = (15, 'PROGRAMA')
     VARIAVEIS = (16, 'VARIAVEIS')
@@ -95,6 +94,7 @@ class TipoToken:
     # Error Token, nao esta presente na gramatica
     ERROR = (28, 'ERRO')
     FIMARQ = (29, 'EOF')
+    OPNEG = (30, '!')
 
 class Token:
     def __init__(self, tipo, lexema, linha):
