@@ -111,7 +111,7 @@ class Sintatico:
         self.C_COMP()
     
     def DECLS(self):
-        if False: # TODO DECLS
+        if not self.atualIgual( tt.VARIAVEIS ):
             pass
         else:
             self.consome( tt.VARIAVEIS )
@@ -122,7 +122,7 @@ class Sintatico:
         self.D()
     
     def D(self):
-        if False: # TODO D
+        if not self.atualIgual( tt.ID ):
             pass
         else:
             self.LIST_DECLS()
@@ -138,7 +138,7 @@ class Sintatico:
         self.E()
 
     def E(self):
-        if False: # TODO E
+        if not self.atualIgual( tt.VIRG ):
             pass
         else:
             self.consome( tt.VIRG )
@@ -164,7 +164,7 @@ class Sintatico:
         self.G()
 
     def G(self):
-        if False: # TODO G
+        if not self.atualIgual( tt.SE ) or not self.atualIgual( tt.ENQUANTO ) or not self.atualIgual( tt.LEIA ) or not self.atualIgual( tt.ESCREVA ) or not self.atualIgual( tt.ATRIB ): 
             pass
         else:
             self.LISTA_COMANDOS()
@@ -189,7 +189,7 @@ class Sintatico:
         self.C_COMP()
 
     def H(self):
-        if False: # TODO H
+        if not self.atualIgual( tt.SENAO ):
             pass
         else:
             self.consome( tt.SENAO )
@@ -227,14 +227,14 @@ class Sintatico:
         self.L()
 
     def L(self):
-        if False: # TODO L
+        if not self.atualIgual( tt.VIRG ):
             pass
         else:
             self.consome( tt.VIRG )
             self.LIST_W()
     
     def ELEM_W(self):
-        if False: # TODO EXPR
+        if not self.atualIgual( tt.CADEIA ):
             pass
         else:
             self.consome( tt.CADEIA )
@@ -244,7 +244,7 @@ class Sintatico:
         self.P()
 
     def P(self):
-        if False: # TODO P
+        if not self.atualIgual( tt.OPREL ):
             pass
         else:
             self.consome( tt.OPREL )
@@ -255,7 +255,7 @@ class Sintatico:
         self.R()
 
     def R(self):
-        if False: # TODO R
+        if not self.atualIgual( tt.OPAD ):
             pass
         else:
             self.consome( tt.OPAD )
@@ -266,7 +266,7 @@ class Sintatico:
         self.S()
 
     def S(self):
-        if False:
+        if not self.atualIgual( tt.OPMUL ):
             pass
         else:
             self.consome( tt.OPMUL )
@@ -292,6 +292,7 @@ class Sintatico:
 if __name__== "__main__":
 
    #nome = input("Entre com o nome do arquivo: ")
-   nome = 'exemplo11.txt'
-   parser = Sintatico(False)
+   nome = 'testes-trabalho-1-2019-2/exemplo11.txt'
+   parser = Sintatico(True)
    parser.interprete(nome)
+   print(parser.tokens)
