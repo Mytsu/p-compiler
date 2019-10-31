@@ -180,8 +180,8 @@ class Lexico:
                     return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
             elif estado == 2:
                 # estado que trata nomes (identificadores ou palavras reservadas)
-                lexema += car
-                while(lexema[-1] != ' '):
+                lexema = lexema + car
+                while(car.isalpha()):
                     car = self.getChar()
                     lexema += car
                 if car is None or (not car.isalnum()):
