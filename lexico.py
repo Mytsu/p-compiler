@@ -227,6 +227,7 @@ class Lexico:
                     # terminou o numero
                     self.ungetChar(car)
                     return Token(TipoToken.CTE, lexema, self.linha)
+                return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
             elif estado == 4:
                 # estado que trata outros tokens primitivos comuns
                 lexema += car
@@ -299,8 +300,10 @@ class Lexico:
 =======
                     return Token(TipoToken.OPREL, lexema, self.linha)
                 elif car == '>':
+                    car.ungetChar()
 >>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
                     return Token(TipoToken.OPREL, lexema, self.linha)
+                return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
             elif estado == 5:
                 # consumindo comentario
                 lexema += car
@@ -325,6 +328,8 @@ class Lexico:
 <<<<<<< HEAD
                 else:
                     return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
+            else:
+                return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
 =======
 >>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
 
