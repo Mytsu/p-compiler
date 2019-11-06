@@ -5,33 +5,35 @@
 
     G1 = {{PROG, DECLS, C-COMP, LIST-DECLS, DECL-TIPO, D, LIST-ID, E, TIPO, LISTACOMANDOS, G, COMANDOS, IF, WHILE, READ, ATRIB, WRITE, EXPR, H, LIST-W, L, ELEM-W, SIMPLES, P, R, TERMO, S, FAT}{programa, id, variaveis, inteiro, real, logico, caracter, abrepar, fechapar, se, abrech, fechach, senao, enquanto, leia, atrib, escreva, cadeia, cte, verdadeiro, falso, oprel, opad, opmul, opneg, pvirg, virg, dpontos}, P, PROG} 
     
-    P={ PROG → programa id pvirg DECLS C-COMP
-        DECLS → $ | variaveis  LIST-DECLS
+    P={ 
+        A → PROG $
+        PROG → programa id pvirg DECLS C-COMP
+        DECLS → λ | variaveis  LIST-DECLS
         LIST-DECLS → DECL-TIPO D
-        D → $ | LIST-DECLS 
+        D → λ | LIST-DECLS 
         DECL-TIPO → LIST-ID dpontos TIPO pvirg 
         LIST-ID → id E
-        E → $ | virg LIST-ID 
+        E → λ | virg LIST-ID 
         TIPO → inteiro | real | logico | caracter
         C-COMP → abrech LISTA-COMANDOS fechach 
         LISTA-COMANDOS → COMANDOS G 
-        G → $ | LISTA-COMANDOS 
+        G → λ | LISTA-COMANDOS 
         COMANDOS → IF | WHILE | READ | WRITE | ATRIB 
         IF → se abrepar EXPR fechapar C-COMP H 
-        H → $ | senao C-COMP 
+        H → λ | senao C-COMP 
         WHILE → enquanto abrepar EXPR fechapar C-COMP 
         READ → leia abrepar LIST-ID fechapar pvirg 
         ATRIB → id atrib EXPR pvirg 
         WRITE → escreva abrepar LIST-W fechapar pvirg 
         LIST-W → ELEM-W L 
-        L → $ | virg LIST-W 
+        L → λ | virg LIST-W 
         ELEM-W → EXPR | cadeia 
         EXPR → SIMPLES P 
-        P → $ | oprel SIMPLES 
+        P → λ | oprel SIMPLES 
         SIMPLES → TERMO R 
-        R → $ | opad SIMPLES 
+        R → λ | opad SIMPLES 
         TERMO → FAT S 
-        S → $ | opmul TERMO 
+        S → λ | opmul TERMO 
         FAT → id | cte | abrepar EXPR fechapar | verdadeiro | falso | opneg FAT}
 
 
@@ -65,9 +67,9 @@ class TipoToken:
     CTE = (2, 'NUM')
     CADEIA = (3, 'CADEIA')
     ATRIB = (4, ':=')
-    OPREL = (5, '= < > <= >= <>')
-    OPAD = (6, '+ -')
-    OPMUL = (7, '* /')
+    OPREL = (5, {'=', '<', '>', '<=', '>=', '<>'})
+    OPAD = (6, {'+', '-'})
+    OPMUL = (7, {'*', '/'})
     PVIRG = (8, ';')
     DPONTOS = (9, ':')
     VIRG = (10, ',')
@@ -75,9 +77,12 @@ class TipoToken:
     FECHAPAR = (12, ')')
     ABRECH = (13, '{')
     FECHACH = (14, '}')
+<<<<<<< HEAD
     FIMARQ = (15, 'FIM_ARQ')
     ERROR = (16, 'ERRO')
 
+=======
+>>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
     # Palavras reservadas
     PROGRAMA = (15, 'PROGRAMA')
     VARIAVEIS = (16, 'VARIAVEIS')
@@ -92,6 +97,10 @@ class TipoToken:
     ESCREVA = (25, 'ESCREVA')
     FALSO = (26, 'FALSO')
     VERDADEIRO = (27, 'VERDADEIRO')
+    # Error Token, nao esta presente na gramatica
+    ERROR = (28, 'ERRO')
+    FIMARQ = (29, 'EOF')
+    OPNEG = (30, '!')
 
 class Token:
     def __init__(self, tipo, lexema, linha):
@@ -104,7 +113,24 @@ class Token:
 
 class Lexico:
     # dicionario de palavras reservadas
+<<<<<<< HEAD
     reservadas = {'escreva': TipoToken.ESCREVA, 'leia': TipoToken.LEIA, 'prog': TipoToken.PROGRAMA, 'var': TipoToken.VARIAVEIS, 'inteiro': TipoToken.INTEIRO, 'real': TipoToken.REAL, 'logico': TipoToken.LOGICO, 'caracter': TipoToken.CARACTER, 'se': TipoToken.SE, 'senao': TipoToken.SENAO, 'enq': TipoToken.ENQUANTO, 'falso': TipoToken.FALSO, 'vdd': TipoToken.VERDADEIRO}
+=======
+    reservadas = { 
+        'leia': TipoToken.LEIA,
+        'escreva': TipoToken.ESCREVA,
+        'programa': TipoToken.PROGRAMA,
+        'variaveis': TipoToken.VARIAVEIS,
+        'inteiro': TipoToken.INTEIRO,
+        'real': TipoToken.REAL,
+        'logico': TipoToken.LOGICO,
+        'caracter': TipoToken.CARACTER,
+        'se': TipoToken.SE,
+        'senao': TipoToken.SENAO,
+        'falso': TipoToken.FALSO,
+        'verdadeiro': TipoToken.VERDADEIRO
+    }
+>>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
 
     def __init__(self, nomeArquivo):
         self.nomeArquivo = nomeArquivo
@@ -208,6 +234,7 @@ class Lexico:
                 if lexema == ':=':
                     return Token(TipoToken.ATRIB, lexema, self.linha)
                 elif car == '=':
+<<<<<<< HEAD
                     car.ungetChar()
                     return Token(TipoToken.OPREL, lexema, self.linha)
                 elif car == ':':
@@ -236,6 +263,26 @@ class Lexico:
                     return Token(TipoToken.FECHAPAR, lexema, self.linha)
                 elif car == '{':
                     car.ungetChar()
+=======
+                    return Token(TipoToken.OPREL, lexema, self.linha)
+                elif car == ':':
+                    return Token(TipoToken.DPONTOS, lexema, self.linha)
+                elif car == ';':
+                    return Token(TipoToken.PVIRG, lexema, self.linha)
+                elif car == '+':
+                    return Token(TipoToken.OPAD, lexema, self.linha)
+                elif car == '-':
+                    return Token(TipoToken.OPAD, lexema, self.linha)
+                elif car == '*':
+                    return Token(TipoToken.OPMUL, lexema, self.linha)
+                elif car == '/':
+                    return Token(TipoToken.OPMUL, lexema, self.linha)
+                elif car == '(':
+                    return Token(TipoToken.ABREPAR, lexema, self.linha)
+                elif car == ')':
+                    return Token(TipoToken.FECHAPAR, lexema, self.linha)
+                elif car == '{':
+>>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
                     return Token(TipoToken.FECHACH, lexema, self.linha)
                 elif lexema == '<>':
                     return Token(TipoToken.OPREL, lexema, self.linha)
@@ -244,10 +291,15 @@ class Lexico:
                 elif lexema == '>=':
                     return Token(TipoToken.OPREL, lexema, self.linha)
                 elif car == '<':
+<<<<<<< HEAD
                     car.ungetChar()
                     return Token(TipoToken.OPREL, lexema, self.linha)
                 elif car == '>':
                     car.ungetChar()
+=======
+                    return Token(TipoToken.OPREL, lexema, self.linha)
+                elif car == '>':
+>>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
                     return Token(TipoToken.OPREL, lexema, self.linha)
             elif estado == 5:
                 # consumindo comentario
@@ -270,8 +322,11 @@ class Lexico:
                                 lexema = ''
                         else:
                             car = self.getChar()
+<<<<<<< HEAD
                 else:
                     return Token(TipoToken.ERROR, '<' + car + '>', self.linha)
+=======
+>>>>>>> 10c10248c16b2c3ec58962ff3931507e44ebd57c
 
 
 if __name__== "__main__":
