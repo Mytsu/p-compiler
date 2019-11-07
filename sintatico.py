@@ -77,12 +77,12 @@ class Sintatico:
             self.lex.abreArquivo()
             self.tokenAtual = self.lex.getToken()
 
+            if self.gerar_tokens:
+                self.tokens.append(self.tokenAtual)
+
             self.A()
 
             self.lex.fechaArquivo()
-
-            if self.gerar_tokens:
-                print(self.tokens)
 
     def atualIgual(self, token):
         (const, _) = token
@@ -164,7 +164,7 @@ class Sintatico:
         self.G()
 
     def G(self):
-        if not self.atualIgual( tt.SE ) or not self.atualIgual( tt.ENQUANTO ) or not self.atualIgual( tt.LEIA ) or not self.atualIgual( tt.ESCREVA ) or not self.atualIgual( tt.ATRIB ): 
+        if not (self.atualIgual( tt.SE ) or self.atualIgual( tt.ENQUANTO ) or self.atualIgual( tt.LEIA ) or self.atualIgual( tt.ESCREVA ) or self.atualIgual( tt.ID )): 
             pass
         else:
             self.LISTA_COMANDOS()
@@ -273,26 +273,32 @@ class Sintatico:
             self.TERMO()
 
     def FAT(self):
-        if self.tokenAtual( tt.ID ):
+        if self.atualIgual( tt.ID ):
             self.consome( tt.ID )
-        elif self.tokenAtual( tt.CTE ):
+        elif self.atualIgual( tt.CTE ):
             self.consome( tt.CTE )
-        elif self.tokenAtual( tt.ABREPAR ):
+        elif self.atualIgual( tt.ABREPAR ):
             self.consome( tt.ABREPAR )
             self.EXPR()
             self.consome( tt.FECHAPAR )
-        elif self.tokenAtual( tt.VERDADEIRO ):
+        elif self.atualIgual( tt.VERDADEIRO ):
             self.consome( tt.VERDADEIRO )
-        elif self.tokenAtual( tt.FALSO ):
+        elif self.atualIgual( tt.FALSO ):
             self.consome( tt.FALSO )
-        elif self.tokenAtual( tt.OPNEG ):
+        elif self.atualIgual( tt.OPNEG ):
             self.consome( tt.OPNEG )
             self.FAT()
 
 if __name__== "__main__":
 
-   #nome = input("Entre com o nome do arquivo: ")
-   nome = 'testes-trabalho-1-2019-2/exemplo11.txt'
-   parser = Sintatico(True)
-   parser.interprete(nome)
-   print(parser.tokens)
+    #nome = input("Entre com o nome do arquivo: ")
+    nome = 'exemplos/exemplo1.txt'
+    parser = Sintatico(True)
+    try:
+        parser.interprete(nome)
+    finally:
+        tokens = []
+        for token in parser.tokens:
+            tokens.append(token.msg)
+        print(tokens)
+    
