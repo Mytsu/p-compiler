@@ -217,8 +217,9 @@ class Lexico:
                     lexema += car
                 if (car is None) or (not car.isalnum()):
                     # terminou o nome
-                    self.ungetChar(car)
-                    lexema = lexema[:-1].strip()
+                    if not len(lexema) == 1:
+                        self.ungetChar(car)
+                        lexema = lexema[:-1].strip()
                     if lexema.upper() in Lexico.reservadas:
                         return Token(Lexico.reservadas[lexema.upper()], lexema, self.linha)
                     else:
@@ -264,6 +265,8 @@ class Lexico:
                     return Token(TipoToken.FECHAPAR, car, self.linha)
                 elif car == '{':
                     return Token(TipoToken.ABRECH, car, self.linha)
+                elif car == '}':
+                    return Token(TipoToken.FECHACH, car, self.linha)
                 elif car == '<':
                     lexema = car
                     lexema += self.getChar()

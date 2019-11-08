@@ -198,9 +198,9 @@ class Sintatico:
     def WHILE(self):
         self.consome( tt.ENQUANTO )
         self.consome( tt.ABREPAR )
-        self.LIST_W()
+        self.EXPR()
         self.consome( tt.FECHAPAR )
-        self.consome( tt.PVIRG )
+        self.C_COMP()
 
     def READ(self):
         self.consome( tt.LEIA )
@@ -235,7 +235,7 @@ class Sintatico:
     
     def ELEM_W(self):
         if not self.atualIgual( tt.CADEIA ):
-            pass
+            self.EXPR()
         else:
             self.consome( tt.CADEIA )
 
