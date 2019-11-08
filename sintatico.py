@@ -60,6 +60,7 @@
 """
 
 from lexico import TipoToken as tt, Token, Lexico
+from sys import argv
 
 class Sintatico:
 
@@ -187,9 +188,10 @@ class Sintatico:
         self.EXPR()
         self.consome( tt.FECHAPAR )
         self.C_COMP()
+        self.H()
 
     def H(self):
-        if not self.atualIgual( tt.SENAO ):
+        if not (self.atualIgual( tt.SENAO )):
             pass
         else:
             self.consome( tt.SENAO )
@@ -292,7 +294,7 @@ class Sintatico:
 if __name__== "__main__":
 
     #nome = input("Entre com o nome do arquivo: ")
-    nome = 'exemplos/exemplo1.txt'
+    nome = argv[1]
     parser = Sintatico(True)
     try:
         parser.interprete(nome)

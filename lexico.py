@@ -293,20 +293,16 @@ class Lexico:
                         car = self.getChar()
                     estado = 1
                 elif lexema == '/*':
-                    while (not car is None):
+                    while (estado != 1):
+                        car = self.getChar()
+                        if (car is None):
+                            estado = 1
+                            continue
                         if (car == '*'):
-                            lexema = car
-                            car = self.getChar
-                            lexema += car
-                            if lexema == '*/':
-                                self.ungetChar(car)
-                                self.linha += 1
-                                estado = 1
-                                car = None
-                            else:
-                                lexema = ''
-                        else:
                             car = self.getChar()
+                            if (car == '/'):
+                                estado = 1
+                                continue
             elif estado == 6:
                 car = self.getChar()
                 while (car != '"'):
